@@ -54,7 +54,12 @@ public final class Transformers {
      * @return A transformed list where each input element is replaced with the produced elements
      */
     public static <I, O> List<O> transform(final Iterable<I> base, final Function<I, O> transformer) {
-        return null;
+        return flattenTransform(base, new Function<I, List<O>>() {
+            public List<O> call(I input){
+                O result = transformer.call(input);
+                return List.of(result);
+            }
+        });
     }
 
     /**
