@@ -38,10 +38,6 @@ public class IterableWithPolicyImpl<T> implements IterableWithPolicy<T> {
         this.predicate = filter;
     }
 
-    public String toString(){
-        return Arrays.toString(this.elements);
-    }
-
     class IteratorImpl implements Iterator<T>{
 
         private int current = 0;
