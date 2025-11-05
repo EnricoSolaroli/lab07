@@ -10,10 +10,10 @@ import it.unibo.inner.api.Predicate;
 
 public class IterableWithPolicyImpl<T> implements IterableWithPolicy<T> {
 
-    final private List<T> elements;
+    final private T[] elements;
 
     public IterableWithPolicyImpl(T[] elements){
-        this.elements = List.of(elements); 
+        this.elements = elements; 
     }
 
     @Override
@@ -37,11 +37,11 @@ public class IterableWithPolicyImpl<T> implements IterableWithPolicy<T> {
 
         @Override
         public boolean hasNext() {
-            return IterableWithPolicyImpl.this.elements.size() > this.current;
+            return IterableWithPolicyImpl.this.elements.length > this.current;
         }
         @Override
         public T next() { 
-            return IterableWithPolicyImpl.this.elements.get(current++);
+            return IterableWithPolicyImpl.this.elements[current++];
         }
 
     }
