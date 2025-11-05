@@ -4,17 +4,29 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import it.unibo.inner.api.IterableWithPolicy;
 import it.unibo.inner.api.Predicate;
 
 public class IterableWithPolicyImpl<T> implements IterableWithPolicy<T> {
 
-    final private T[] elements;
+    private final T[] elements;
+    private Predicate<T> predicate;
 
     public IterableWithPolicyImpl(T[] elements){
-        this.elements = elements; 
+        this(elements, new Predicate<T>(){
+            public boolean test(T elem){
+                return true;
+            }
+        });
     }
+
+    public IterableWithPolicyImpl(T[] elements, Predicate<T> predicate){
+       this.elements = elements;
+       this.predicate = predicate;
+    }
+
 
     @Override
     public Iterator<T> iterator() {
@@ -22,28 +34,49 @@ public class IterableWithPolicyImpl<T> implements IterableWithPolicy<T> {
     }
 
     @Override
-    public void setIterationPolicy(Predicate filter) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setIterationPolicy'");
+    public void setIterationPolicy(Predicate<T> filter) {
+        this.predicate = filter;
     }
 
-   public String toString(){
-        return this.elements.toString();
-   }
+    public String toString(){
+        return Arrays.toString(this.elements);
+    }
 
     class IteratorImpl implements Iterator<T>{
 
         private int current = 0;
+        private T nextValidElement = null;
+
+        public IteratorImpl() {
+            advance(); 
+        }
+
+        private void advance(){
+            this.nextValidElement = null;
+            while(current <  IterableWithPolicyImpl.this.elements.length){
+                T currentItem = IterableWithPolicyImpl.this.elements[current];
+                current ++;
+
+                if(IterableWithPolicyImpl.this.predicate.test(currentItem)){
+                    this.nextValidElement = currentItem;
+                    return;
+                }
+            }
+        }
 
         @Override
         public boolean hasNext() {
-            return IterableWithPolicyImpl.this.elements.length > this.current;
-        }
-        @Override
-        public T next() { 
-            return IterableWithPolicyImpl.this.elements[current++];
+            return this.nextValidElement != null;
         }
 
+        @Override
+        public T next() { 
+            if (!hasNext()) {
+                throw new NoSuchElementException("Nessun altro elemento soddisfa il filtro.");
+            }
+            T itemToReturn = this.nextValidElement;
+            advance(); 
+            return itemToReturn;
+        }
     }
-    
 }
