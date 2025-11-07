@@ -64,7 +64,6 @@ class TestStrictBankAccount {
             assertFalse(e.getMessage().isBlank()); // Not a blank or empty message
             assertTrue(e.getMessage().length() >= ACCEPTABLE_MESSAGE_LENGTH);
         }
-        
     }
 
     /**
