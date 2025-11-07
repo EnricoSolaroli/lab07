@@ -11,6 +11,7 @@ public class StrictBankAccount extends SimpleBankAccount {
      * Transaction fee charged to the bank account.
      */
     public static final double TRANSACTION_FEE = 0.1;
+    
 
     /**
      * Builds a new {@link StrictBankAccount}.
